@@ -8,7 +8,10 @@ from transform import transform_all
 
 def main():
     print("Step 1/4: extract")
-    extract.main()
+    failed = extract.main()
+    if failed:
+        print(f"EXTRACT FAILED for: {', '.join(failed)}. Nothing was loaded.")
+        sys.exit(1)
 
     print("Step 2/4: transform")
     df = transform_all()
