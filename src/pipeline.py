@@ -1,6 +1,7 @@
 import sys
 
 import extract
+from config import CITIES
 from load import load
 from quality import run_all_checks
 from transform import transform_all
@@ -17,7 +18,7 @@ def main():
     df = transform_all()
 
     print("Step 3/4: quality checks")
-    problems = run_all_checks(df)
+    problems = run_all_checks(df, expected_cities=list(CITIES.keys()))
     if problems:
         print("QUALITY CHECKS FAILED. Nothing was loaded.")
         for problem in problems:

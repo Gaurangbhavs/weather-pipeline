@@ -65,7 +65,22 @@ def check_row_counts(df, expected_days):
     return problems
 
 
-def run_all_checks(df, expected_days=30):
+def check_all_cities_present(df, expected_cities):
+    """Every expected city must appear in the data, and no unknown ones."""
+    found = set(df["city"].unique())
+    expected = set(expected_cities)
+
+    problems = []
+    missing = sorted(expected - found)
+    if missing:
+        problems.append(f"Missing city data for: {', '.join(missing)}")
+    unexpected = sorted(found - expected)
+    if unexpected:
+        problems.append(f"Unexpected city in data: {', '.join(unexpected)}")
+    return problems
+
+
+def run_all_checks(df, expected_days=30, expected_cities=None):
     """Run every check and return one combined list of problems."""
     problems = []
     problems += check_no_missing_values(df)
@@ -74,4 +89,6 @@ def run_all_checks(df, expected_days=30):
     problems += check_max_not_below_min(df)
     problems += check_rain_and_wind(df)
     problems += check_row_counts(df, expected_days)
+    if expected_cities is not None:
+        problems += check_all_cities_present(df, expected_cities)
     return problems
